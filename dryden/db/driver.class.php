@@ -117,9 +117,9 @@ class db_driver extends PDO {
      * @param String $query
      * @return type
      */
-    public function query($query) {
+    public function query(string $query, ?int $fetchMode = null, ...$fetchModeArgs) {
         try {
-            $result = parent::query($query);
+            $result = parent::query($query, $fetchMode, $fetchModeArgs);
             return($result);
         } catch (PDOException $e) {
             $errormessage = $this->errorInfo();

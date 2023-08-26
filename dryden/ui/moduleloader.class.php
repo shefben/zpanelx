@@ -26,20 +26,17 @@ class ui_moduleloader {
             $order = trim($user['catorder'], '[]');
             $sql = 'SELECT * FROM `x_modcats`ORDER BY FIELD(`mc_id_pk`, '.$order.')';
         } else if($catname != ''){
-            $sql = 'SELECT * FROM x_modcats WHERE mc_name_vc = :catname';
+            $sql = 'SELECT * FROM x_modcats WHERE mc_name_vc = "' . $catname . '"';
         }else{
             $sql = 'SELECT * FROM x_modcats';
         }
 
         $numrows = $zdbh->prepare($sql);
-        $numrows->bindParam(':catname', $catname);
         $numrows->execute();
-
         if ($numrows->fetchColumn() <> 0) {
             $sql = $zdbh->prepare($sql);
-            $sql->bindParam(':uid', $uid);
-            $res = array();
             $sql->execute();
+            $res = array();
             $has_icons = false;
             while ($row = $sql->fetch()) {
                 $checksql = "SELECT * FROM x_modules WHERE mo_category_fk = :cid AND mo_type_en = 'user' AND mo_enabled_en = 'true'";
