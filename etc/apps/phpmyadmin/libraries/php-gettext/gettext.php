@@ -92,6 +92,10 @@ class gettext_reader {
       }
   }
 
+  public function __construct($Reader, $enable_cache = true) {
+    return $this->gettext_reader($Reader, $enable_cache);
+  }
+
   /**
    * Constructor
    *

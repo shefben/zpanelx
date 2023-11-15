@@ -54,22 +54,15 @@ class ui_templateparser
      * Runs though the functions array and loads the relivent function compiler
      * @author Sam Mottley (smottley@zpanelcp.com)
      */
-    static function CompileFunctions($data, $callerId)
+    static function CompileFunctions($data)
     {
         $temp = $data;
         runtime_hook::Execute('OnBeforeTemplateProcessor');
         foreach (ui_templateparser::$Functions as $Tag => $pattern) {
-            if($callerId == "gen") {
-                error_log("calling: Compile" . $Tag . " id:" . $callerId);
-            }
             $temp = call_user_func_array('ui_templateparser::Compile' . $Tag, array($pattern, $temp));
-            if($callerId == "gen") {
-                error_log("Compile" . $Tag . " completed:" . $callerId);
-            }
         }
         // error_log("Execute:OnAfterTemplateProcessor:" . $callerId);
         runtime_hook::Execute('OnAfterTemplateProcessor');
-        error_log("Execute:OnAfterTemplateProcessor completed," . $callerId);
         return $temp;
     }
 
@@ -255,10 +248,8 @@ class ui_templateparser
             foreach ($match[1] as $classes) {
                 // error_log("class_exists:" . $classes);
                 if (class_exists('' . $classes . '')) {
-                    error_log("call_user_func:" . $classes);
                     $moduleTemplate = call_user_func(array($classes, 'Template'));
-                    error_log("CompileFunctions, class:" . $classes . ": " . $moduleTemplate);
-                    $codeToInsert = ui_templateparser::CompileFunctions($moduleTemplate, " cls_". $classes);
+                    $codeToInsert = ui_templateparser::CompileFunctions($moduleTemplate);
                     // error_log("CompileFunctions returns:" . $codeToInsert . ", replace by it");
                     $data = str_replace($match[0][$i], $codeToInsert, $data);
                     // error_log("str_replace completed:" . $classes . "=>" . $codeToInsert);
@@ -266,7 +257,7 @@ class ui_templateparser
                 $i++;
             }
         }
-        error_log("CompileTemplateClass completed.");
+        // error_log("CompileTemplateClass completed.");
         return $data;
     }
 
@@ -395,14 +386,11 @@ class ui_templateparser
      */
     static function Generate($template_path)
     {
-        error_log("Generate:" . $template_path);
         self::setLocation();
         $template_raw = file_get_contents($template_path . "/master.ztml");
-        error_log("getcontent(master.ztml)");
-        $template_code = ui_templateparser::allowBr(ui_templateparser::CompileFunctions($template_raw, "gen"));
-        error_log("clearOldCache");
+        $template_code = ui_templateparser::allowBr(ui_templateparser::CompileFunctions($template_raw));
         ui_templateparser::clearOldCache();
-        error_log("runPHP");
+        // error_log("runPHP");
         return ui_templateparser::runPHP($template_code);
     }
 
