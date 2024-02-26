@@ -25,3 +25,7 @@ ZPanel is licensed under the GNU GENERAL PUBLIC LICENSE (GPL v3) you can view a 
 ##Getting support
 
 We provide excellent free (and premium) [support](http://www.zpanelcp.com/support/) and [documentation](http://www.zpanelcp.com/support/documentation/) at our website.
+
+Port to ubuntu 22.04：
+1、Declaration of query(string $query, ?int $fetchMode = null) must be compatible with PDO::query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false in /etc/zpanel/panel/dryden/db/driver.class.php on line 120
+

@@ -34,7 +34,7 @@ class runtime_randomstring{
         }
         
         //randomise string again
-        mt_srand($seed);
+        mt_srand(0);
         mt_rand();
         
         //Make the random number into a random string
@@ -73,7 +73,7 @@ class runtime_randomstring{
                     $seed .= str_replace('-','',crc32(uniqid(sha1(microtime(true) . getmypid() . rand(10000,99999999)), true)));
                 }
                 //randomise string again
-                mt_srand($seed);
+                mt_srand(0);
                 mt_rand();
                 
                 //Change random number into string
@@ -91,7 +91,7 @@ class runtime_randomstring{
                 $hashMixed = $hashMixed . $additionalHash;
             }
         }
-            
+   
         //check if hashing is needed
         if($hash == false){
             //do not hash

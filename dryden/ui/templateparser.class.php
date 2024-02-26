@@ -17,6 +17,7 @@ class ui_templateparser
      * Array of all the functions allowed by ZPanelX Template system with the pattern to identify them
      * @author Sam Mottley (smottley@zpanelcp.com)
      */
+    // 最后的i表示匹配大小写，s模式中的圆点元字符（.）匹配所有的字符，包括换行符 
     static public $Functions = array(
         'PHPTags' => "/(<\?php)|(<\?)|(\?>)/is",
         'TemplateClass' => "/<# ([\w*_*]*) #>/is",
@@ -60,6 +61,7 @@ class ui_templateparser
         foreach (ui_templateparser::$Functions as $Tag => $pattern) {
             $temp = call_user_func_array('ui_templateparser::Compile' . $Tag, array($pattern, $temp));
         }
+        // error_log("Execute:OnAfterTemplateProcessor:" . $callerId);
         runtime_hook::Execute('OnAfterTemplateProcessor');
         return $temp;
     }
@@ -244,14 +246,18 @@ class ui_templateparser
         if ($match) {
             $i = 0;
             foreach ($match[1] as $classes) {
+                // error_log("class_exists:" . $classes);
                 if (class_exists('' . $classes . '')) {
                     $moduleTemplate = call_user_func(array($classes, 'Template'));
                     $codeToInsert = ui_templateparser::CompileFunctions($moduleTemplate);
+                    // error_log("CompileFunctions returns:" . $codeToInsert . ", replace by it");
                     $data = str_replace($match[0][$i], $codeToInsert, $data);
+                    // error_log("str_replace completed:" . $classes . "=>" . $codeToInsert);
                 }
                 $i++;
             }
         }
+        // error_log("CompileTemplateClass completed.");
         return $data;
     }
 
@@ -384,6 +390,7 @@ class ui_templateparser
         $template_raw = file_get_contents($template_path . "/master.ztml");
         $template_code = ui_templateparser::allowBr(ui_templateparser::CompileFunctions($template_raw));
         ui_templateparser::clearOldCache();
+        // error_log("runPHP");
         return ui_templateparser::runPHP($template_code);
     }
 

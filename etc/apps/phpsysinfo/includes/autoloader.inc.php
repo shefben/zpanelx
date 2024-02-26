@@ -22,24 +22,20 @@ error_reporting(E_ALL | E_STRICT);
  *
  * @return void
  */
-function __autoload($class_name)
-{
+spl_autoload_register(function($class_name) {
     //$class_name = str_replace('-', '', $class_name);
-
     /* case-insensitive folders */
     $dirs = array('/plugins/'.strtolower($class_name).'/', '/includes/mb/', '/includes/ups/');
 
     foreach ($dirs as $dir) {
         if (file_exists(APP_ROOT.$dir.'class.'.strtolower($class_name).'.inc.php')) {
             include_once APP_ROOT.$dir.'class.'.strtolower($class_name).'.inc.php';
-
             return;
         }
     }
 
     /* case-sensitive folders */
     $dirs = array('/includes/', '/includes/interface/', '/includes/to/', '/includes/to/device/', '/includes/os/', '/includes/plugin/', '/includes/xml/', '/includes/web/', '/includes/error/', '/includes/js/', '/includes/output/');
-
     foreach ($dirs as $dir) {
         if (file_exists(APP_ROOT.$dir.'class.'.$class_name.'.inc.php')) {
             include_once APP_ROOT.$dir.'class.'.$class_name.'.inc.php';
@@ -52,7 +48,7 @@ function __autoload($class_name)
 
     $error->addError("_autoload(\"".$class_name."\")", "autoloading of class file (class.".$class_name.".inc.php) failed!");
     $error->errorsAsXML();
-}
+});
 
 /**
  * sets a user-defined error handler function

@@ -1401,7 +1401,7 @@ function PMA_RTN_handleExecute()
         if ($outcome) {
 
             // Pass the SQL queries through the "pretty printer"
-            $output  = PMA_Util::formatSql(implode($queries, "\n"));
+            $output  = PMA_Util::formatSql(implode("\n", $queries));
 
             // Display results
             $output .= "<fieldset><legend>";

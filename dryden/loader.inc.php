@@ -15,13 +15,22 @@ $mtime = $mtime[1] + $mtime[0];
 $starttime = $mtime;
 $class_name = null;
 
-function __autoload($class_name)
-{
-    $path = 'dryden/' . str_replace('_', '/', $class_name) . '.class.php';
-    if (file_exists($path)) {
-        require_once $path;
+// function __autoload($class_name)
+// {
+//     $path = 'dryden/' . str_replace('_', '/', $class_name) . '.class.php';
+//     if (file_exists($path)) {
+//         require_once $path;
+//     }
+// }
+
+spl_autoload_register(function($class_name) {
+    if($class_name) {
+        $path = 'dryden/' . str_replace('_', '/', $class_name) . '.class.php';
+        if (file_exists($path)) {
+            require $path;
+        }
     }
-}
+});
 
 if (isset($_GET['module'])) {
     $CleanModuleName = fs_protector::SanitiseFolderName($_GET['module']);
